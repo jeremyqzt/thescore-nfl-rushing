@@ -5,12 +5,16 @@ NoneInput = "None"
 SortByTypesMap = {
     "ASC": SortByTypes.ASC,
     "DESC": SortByTypes.DESC,
-    NoneInput: None,
+
+    # Assuming some reasonable Defaults (Since we page)
+    NoneInput: SortByTypes.ASC,
 }
 
 SortTypesMap = {
     "TOTAL_RUSHING_YARDS": SortTypes.TOTAL_RUSHING_YARDS,
     "LONGEST_RUSH": SortTypes.LONGEST_RUSH,
     "TOTAL_RUSHING_TOUCHDOWN": SortTypes.TOTAL_RUSHING_TOUCHDOWN,
-    NoneInput: None,
+
+    # Assuming some reasonable Defaults (Since we page)
+    NoneInput: SortTypes.TOTAL_RUSHING_YARDS,
 }

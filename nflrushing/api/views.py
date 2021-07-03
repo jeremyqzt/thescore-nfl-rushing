@@ -1,4 +1,5 @@
 import csv
+import json
 from django.http import HttpResponse
 
 from rest_framework.views import APIView
@@ -16,13 +17,14 @@ class NFLRushingView(APIView):
             'sort_by', NoneInput)]
         filter = request.query_params.get('filter', None)
         page = int(request.query_params.get('page', 1))
-        page_size = int(request.query_params.get('page_size', 100))
+        page_size = int(request.query_params.get('page_size', 20))
 
         output, total = GetAllStatsQuery().execute(sort_on=sort, sort_by=sort_by,
                                                    name_filter=filter, page=page, page_size=page_size)
 
         resp = {
-            "paged_data": output,
+            "data": output,
+            "current": page,
             "total": total
         }
         return Response(resp, status=status.HTTP_200_OK)
@@ -30,10 +32,12 @@ class NFLRushingView(APIView):
 
 class NFLRushingEXCLView(APIView):
     def post(self, request):
-        sort = SortTypesMap[request.POST.get('sort', NoneInput)]
-        sort_by = SortByTypesMap[request.POST.get(
+        post_data = json.loads(request.body.decode("utf-8"))
+        print(post_data)
+        sort = SortTypesMap[post_data.get('sort', NoneInput)]
+        sort_by = SortByTypesMap[post_data.get(
             'sort_by', NoneInput)]
-        filter = request.POST.get('filter', None)
+        filter = post_data.get('filter', None)
 
         output, _ = GetAllStatsQuery().execute(sort_on=sort, sort_by=sort_by,
                                                name_filter=filter, page=0, page_size=0)
@@ -64,6 +68,6 @@ class NFLRushingEXCLView(APIView):
         writer.writeheader()
         for data in output:
             # Return type is a tuple of 1
-            writer.writerow(data[0])
+            writer.writerow(data)
 
         return response

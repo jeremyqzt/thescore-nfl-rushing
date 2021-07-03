@@ -10,5 +10,5 @@ class GetAllStatsQuery():
             sort_on, sort_by, name_filter, page, page_size)
 
         ret_paged_stats = [NFLRushingStats(
-            statsProjection=obj).to_json() for obj in all_stats]
+            statsProjection=obj).to_json()[0] for obj in all_stats]
         return ret_paged_stats, total
