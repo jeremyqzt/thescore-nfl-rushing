@@ -1,0 +1,2 @@
+class InvalidStatsObject(Exception):
+    pass
