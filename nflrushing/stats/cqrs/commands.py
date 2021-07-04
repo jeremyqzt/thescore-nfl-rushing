@@ -4,12 +4,12 @@ from stats.models import EventTypes
 
 
 class CreateStatsCmd():
-    def execute(self, stats: NFLRushingStats, event_type: EventTypes):
+    def execute(self, stats: NFLRushingStats, event_type: EventTypes, fname: str):
         stats_uuid = UUIDService.generate_uuid()
         new_event = StatsEventService.createEntry(
-            stats, stats_uuid, event_type)
+            stats, stats_uuid, event_type, fname)
 
-        created_event = NFLRushingStats(json=new_event.event, )
+        created_event = NFLRushingStats(json=new_event.event)
 
         player_uuid = UUIDService.generate_uuid()
         new_player = ProjectionService.projectPlayers(

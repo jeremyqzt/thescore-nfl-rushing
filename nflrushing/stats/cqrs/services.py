@@ -29,7 +29,7 @@ class UUIDService:
 
 class StatsEventService:
     @staticmethod
-    def createEntry(entry: NFLRushingStats, uuid: str, caller: EventTypes) -> StatsEvent:
+    def createEntry(entry: NFLRushingStats, uuid: str, caller: EventTypes, fname: str) -> StatsEvent:
         msg_pack = entry.to_json()
         uuid = UUIDService.generate_uuid()
         creation_index = 0
@@ -38,7 +38,8 @@ class StatsEventService:
             uid=uuid,
             index=creation_index,
             event_type=caller,
-            event=msg_pack
+            event=msg_pack,
+            fname=fname,
         )
 
         return inst

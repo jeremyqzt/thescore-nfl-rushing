@@ -28,6 +28,7 @@ class StatsEvent(models.Model):
 
     event_type = models.IntegerField(
         choices=EventTypes.choices(), default=EventTypes.CREATE_SYSTEM)
+    fname = models.CharField(max_length=255, default='')
     event = jsonfield.JSONField()
 
     class Meta:
