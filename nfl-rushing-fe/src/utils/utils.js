@@ -1,10 +1,11 @@
-import { SORT_MAP } from "./constants";
+import { SORT_MAP, HOST } from "./constants";
 
 export const buildStatsQueryFromParams = (query) => {
-  let url = "http://localhost:8000/api/listStats?";
+  let url = `http://${HOST}:8000/api/listStats?`;
   url += `page_size=${query.pageSize}`;
   url += `&page=${query.page + 1}`;
   if (query.filters.length > 0) {
+    // Only 1 filter
     url += `&filter=${query.filters[0].value}`;
   }
 
@@ -28,6 +29,6 @@ export const buildExportAsExcelParams = (filters, ordering) => {
 
   return {
     data,
-    url: "http://localhost:8000/api/listStatsExcel/",
+    url: `http://${HOST}:8000/api/listStatsExcel/`,
   };
 };

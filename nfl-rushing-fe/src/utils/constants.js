@@ -112,3 +112,5 @@ export const SORT_MAP = {
   Yds: "TOTAL_RUSHING_YARDS",
   TD: "TOTAL_RUSHING_TOUCHDOWN",
 };
+
+export const HOST = 'localhost';

@@ -92,6 +92,7 @@ const NFLRushingTable = () => {
         pageSize: 20,
         search: false,
         pageSizeOptions: [20, 50, 100],
+        draggable: false,
         exportCsv: () => {
           const { url, data } = buildExportAsExcelParams(
             filtering.current,
