@@ -3,9 +3,10 @@
 FROM node:13.12.0-alpine as build
 
 WORKDIR /app/nfl-rushing-fe
+
 COPY ./nfl-rushing-fe/package.json ./
 COPY ./nfl-rushing-fe/package-lock.json ./
-RUN npm ci --silent
+RUN npm install --only=prod
 COPY ./nfl-rushing-fe/ ./
 RUN npm run build
 

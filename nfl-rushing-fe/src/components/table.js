@@ -17,9 +17,13 @@ const NFLRushingTable = () => {
   const [ordering, setOrdering] = useState({});
 
   const RENDER_COLUMNS = columns.map((column) => {
+    const cellStyle = {
+      cellStyle: { whiteSpace: 'nowrap' }
+    }
     if (FILTERABLE_COLUMNS.includes(column.field)) {
       return {
         ...column,
+        ...cellStyle,
         filtering: true,
         sorting: false,
       };
@@ -28,6 +32,7 @@ const NFLRushingTable = () => {
     if (SORTABLE_COLUMNS.includes(column.field)) {
       return {
         ...column,
+        ...cellStyle,
         filtering: false,
         customSort: () => {},
       };
@@ -35,6 +40,7 @@ const NFLRushingTable = () => {
 
     return {
       ...column,
+      ...cellStyle,
       filtering: false,
       sorting: false,
     };
@@ -86,7 +92,6 @@ const NFLRushingTable = () => {
         filtering: true,
         sorting: true,
         paging: true,
-        padding: "dense",
         exportButton: { csv: true },
         exportAllData: true,
         pageSize: 20,
