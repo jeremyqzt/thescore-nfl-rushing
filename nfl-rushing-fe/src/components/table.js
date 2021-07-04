@@ -3,22 +3,35 @@ import MaterialTable, { MTableBody } from "material-table";
 import {
   tableIcons,
   columns,
-  SORTABLE_COLUMNS,
   FILTERABLE_COLUMNS,
-  SORT_MAP,
+  SORTABLE_COLUMNS,
 } from "../utils/constants";
+import {
+  buildStatsQueryFromParams,
+  buildExportAsExcelParams,
+} from "../utils/utils";
 import { saveAs } from "file-saver";
 
 const NFLRushingTable = () => {
   const [filters, setFilters] = useState({});
   const [ordering, setOrdering] = useState({});
 
-  const renderColumns = columns.map((column) => {
+  const handleOrderCHange = (order, direction) => {
+    if (order !== -1) {
+      setOrdering({
+        orderBy: { field: RENDER_COLUMNS[order].field },
+        orderDirection: direction,
+      });
+    } else {
+      setOrdering({});
+    }
+  };
+
+  const RENDER_COLUMNS = columns.map((column) => {
     if (FILTERABLE_COLUMNS.includes(column.field)) {
       return {
         ...column,
         sorting: false,
-        customFilterAndSearch: (term, rowData) => term == rowData.name.length,
       };
     }
 
@@ -41,25 +54,15 @@ const NFLRushingTable = () => {
     <MaterialTable
       title="NFL Rushing Stats"
       icons={tableIcons}
-      columns={renderColumns}
+      columns={RENDER_COLUMNS}
       data={(query) =>
         new Promise((resolve, _) => {
-          let url = "http://localhost:8000/api/listStats?";
-          url += `page_size=${query.pageSize}`;
-          url += `&page=${query.page + 1}`;
-          if (query.filters.length > 0) {
-            url += `&filter=${query.filters[0].value}`;
-          }
-
-          if (query.orderBy && query.orderDirection) {
-            url += `&sort=${
-              SORT_MAP[query.orderBy.field]
-            }&sort_by=${query.orderDirection.toUpperCase()}`;
-          }
+          const url = buildStatsQueryFromParams(query);
 
           fetch(url, { mode: "cors" })
             .then((response) => response.json())
             .then((result) => {
+              console.log(result);
               resolve({
                 data: result.data,
                 page: result.current - 1,
@@ -68,16 +71,7 @@ const NFLRushingTable = () => {
             });
         })
       }
-      onOrderChange={(order, direction) => {
-        if (order !== -1) {
-          setOrdering({
-            orderBy: { field: renderColumns[order].field },
-            orderDirection: direction,
-          });
-        } else {
-          setOrdering({});
-        }
-      }}
+      onOrderChange={handleOrderCHange}
       components={{
         Body: (props) => (
           <MTableBody
@@ -98,21 +92,11 @@ const NFLRushingTable = () => {
         padding: "dense",
         exportButton: { csv: true },
         exportAllData: true,
-        pageSize: 10,
+        pageSize: 20,
         search: false,
-        pageSizeOptions: [10, 20, 50],
+        pageSizeOptions: [20, 50, 100],
         exportCsv: () => {
-          let url = "http://localhost:8000/api/listStatsExcel/";
-
-          const data = {
-            filter: filters ? filters.value : undefined,
-            sort: ordering.orderBy
-              ? SORT_MAP[ordering.orderBy.field]
-              : undefined,
-            sort_by: ordering.orderDirection
-              ? ordering.orderDirection.toUpperCase()
-              : undefined,
-          };
+          const { url, data } = buildExportAsExcelParams(filters, ordering);
 
           fetch(url, {
             mode: "cors",
