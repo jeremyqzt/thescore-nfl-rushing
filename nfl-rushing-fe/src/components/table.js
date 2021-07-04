@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import MaterialTable, { MTableBody } from "material-table";
 import {
   tableIcons,
@@ -13,7 +13,7 @@ import {
 import { saveAs } from "file-saver";
 
 const NFLRushingTable = () => {
-  const [filters, setFilters] = useState({});
+  const filtering = useRef({});
   const [ordering, setOrdering] = useState({});
 
   const RENDER_COLUMNS = columns.map((column) => {
@@ -59,7 +59,6 @@ const NFLRushingTable = () => {
       data={(query) =>
         new Promise((resolve, _) => {
           const url = buildStatsQueryFromParams(query);
-          console.log(query);
           fetch(url, { mode: "cors" })
             .then((response) => response.json())
             .then((result) => {
@@ -77,11 +76,8 @@ const NFLRushingTable = () => {
           <MTableBody
             {...props}
             onFilterChanged={(columnId, value) => {
-              console.log(columnId, value);
               props.onFilterChanged(columnId, value);
-              setFilters({
-                filter: value,
-              });
+              filtering.current = { value };
             }}
           />
         ),
@@ -97,7 +93,10 @@ const NFLRushingTable = () => {
         search: false,
         pageSizeOptions: [20, 50, 100],
         exportCsv: () => {
-          const { url, data } = buildExportAsExcelParams(filters, ordering);
+          const { url, data } = buildExportAsExcelParams(
+            filtering.current,
+            ordering
+          );
           fetch(url, {
             mode: "cors",
             method: "POST",
