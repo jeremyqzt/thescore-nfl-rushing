@@ -16,21 +16,11 @@ const NFLRushingTable = () => {
   const [filters, setFilters] = useState({});
   const [ordering, setOrdering] = useState({});
 
-  const handleOrderCHange = (order, direction) => {
-    if (order !== -1) {
-      setOrdering({
-        orderBy: { field: RENDER_COLUMNS[order].field },
-        orderDirection: direction,
-      });
-    } else {
-      setOrdering({});
-    }
-  };
-
   const RENDER_COLUMNS = columns.map((column) => {
     if (FILTERABLE_COLUMNS.includes(column.field)) {
       return {
         ...column,
+        filtering: true,
         sorting: false,
       };
     }
@@ -50,6 +40,17 @@ const NFLRushingTable = () => {
     };
   });
 
+  const handleOrderCHange = (order, direction) => {
+    if (order !== -1) {
+      setOrdering({
+        orderBy: { field: RENDER_COLUMNS[order].field },
+        orderDirection: direction,
+      });
+    } else {
+      setOrdering({});
+    }
+  };
+
   return (
     <MaterialTable
       title="NFL Rushing Stats"
@@ -58,11 +59,10 @@ const NFLRushingTable = () => {
       data={(query) =>
         new Promise((resolve, _) => {
           const url = buildStatsQueryFromParams(query);
-
+          console.log(query);
           fetch(url, { mode: "cors" })
             .then((response) => response.json())
             .then((result) => {
-              console.log(result);
               resolve({
                 data: result.data,
                 page: result.current - 1,
@@ -77,6 +77,7 @@ const NFLRushingTable = () => {
           <MTableBody
             {...props}
             onFilterChanged={(columnId, value) => {
+              console.log(columnId, value);
               props.onFilterChanged(columnId, value);
               setFilters({
                 filter: value,
@@ -97,7 +98,6 @@ const NFLRushingTable = () => {
         pageSizeOptions: [20, 50, 100],
         exportCsv: () => {
           const { url, data } = buildExportAsExcelParams(filters, ordering);
-
           fetch(url, {
             mode: "cors",
             method: "POST",

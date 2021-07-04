@@ -33,7 +33,6 @@ class NFLRushingView(APIView):
 class NFLRushingEXCLView(APIView):
     def post(self, request):
         post_data = json.loads(request.body.decode("utf-8"))
-        print(post_data)
         sort = SortTypesMap[post_data.get('sort', NoneInput)]
         sort_by = SortByTypesMap[post_data.get(
             'sort_by', NoneInput)]
