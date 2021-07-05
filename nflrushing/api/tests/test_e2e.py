@@ -56,7 +56,7 @@ def test_view_data(client):
     url = reverse('list-stats')
     for item in Test_Data:
         stats_entry = NFLRushingStats(json=item)
-        CreateStatsCmd().execute(stats_entry, EventTypes.CREATE_SYSTEM)
+        CreateStatsCmd().execute(stats_entry, EventTypes.CREATE_SYSTEM, "test")
 
     response = client.get(url)
     assert response.status_code == 200
@@ -70,7 +70,7 @@ def test_view_data_paging(client):
     url = reverse('list-stats')
     for item in Test_Data:
         stats_entry = NFLRushingStats(json=item)
-        CreateStatsCmd().execute(stats_entry, EventTypes.CREATE_SYSTEM)
+        CreateStatsCmd().execute(stats_entry, EventTypes.CREATE_SYSTEM, "test")
 
     data = {'page': 1, "page_size": 1}
 
@@ -94,7 +94,7 @@ def test_view_data_filtered(client):
     url = reverse('list-stats')
     for item in Test_Data:
         stats_entry = NFLRushingStats(json=item)
-        CreateStatsCmd().execute(stats_entry, EventTypes.CREATE_SYSTEM)
+        CreateStatsCmd().execute(stats_entry, EventTypes.CREATE_SYSTEM, "test")
 
     data = {'filter': 'Shaun'}
 
@@ -109,7 +109,7 @@ def test_view_data_sorted_Lng(client):
     url = reverse('list-stats')
     for item in Test_Data:
         stats_entry = NFLRushingStats(json=item)
-        CreateStatsCmd().execute(stats_entry, EventTypes.CREATE_SYSTEM)
+        CreateStatsCmd().execute(stats_entry, EventTypes.CREATE_SYSTEM, "test")
 
     data = {'sort': 'LONGEST_RUSH', 'sort_by': "ASC"}
 
@@ -131,7 +131,7 @@ def test_view_data_sorted_TD(client):
     url = reverse('list-stats')
     for item in Test_Data:
         stats_entry = NFLRushingStats(json=item)
-        CreateStatsCmd().execute(stats_entry, EventTypes.CREATE_SYSTEM)
+        CreateStatsCmd().execute(stats_entry, EventTypes.CREATE_SYSTEM, "test")
 
     data = {'sort': 'TOTAL_RUSHING_TOUCHDOWN', 'sort_by': "ASC"}
 
@@ -153,7 +153,7 @@ def test_view_data_sorted_Yds(client):
     url = reverse('list-stats')
     for item in Test_Data:
         stats_entry = NFLRushingStats(json=item)
-        CreateStatsCmd().execute(stats_entry, EventTypes.CREATE_SYSTEM)
+        CreateStatsCmd().execute(stats_entry, EventTypes.CREATE_SYSTEM, "test")
 
     data = {'sort': 'TOTAL_RUSHING_YARDS', 'sort_by': "ASC"}
 
